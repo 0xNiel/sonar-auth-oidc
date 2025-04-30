@@ -19,11 +19,11 @@
 	</licenses>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.pluginClass>org.vaulttec.sonarqube.auth.oidc.AuthOidcPlugin</sonar.pluginClass>
 		<sonar.pluginKey>authoidc</sonar.pluginKey>
-		<sonar-plugin-api.version>7.4</sonar-plugin-api.version>
+		<sonar-plugin-api.version>10.0.0.68432</sonar-plugin-api.version>
 		<nimbusds-oidc-sdk.version>10.14.2</nimbusds-oidc-sdk.version>
 		<nimbusds-jose-jwt.version>9.31</nimbusds-jose-jwt.version>
 
@@ -96,6 +96,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<pluginClass>org.vaulttec.sonarqube.auth.oidc.AuthOidcPlugin</pluginClass>
+					<sonarLintSupported>true</sonarLintSupported>
+					<sonarQubeMinVersion>10.0</sonarQubeMinVersion>
+					<skipDependenciesPackaging>true</skipDependenciesPackaging>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -124,6 +127,28 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.4.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<relocations>
+								<relocation>
+									<pattern>com.nimbusds</pattern>
+									<shadedPattern>org.vaulttec.sonarqube.auth.oidc.shaded.com.nimbusds</shadedPattern>
+								</relocation>
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -131,6 +156,12 @@
 		<dependency>
 			<groupId>org.sonarsource.sonarqube</groupId>
 			<artifactId>sonar-plugin-api</artifactId>
+			<version>${sonar-plugin-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sonarsource.sonarqube</groupId>
+			<artifactId>sonar-plugin-api-impl</artifactId>
 			<version>${sonar-plugin-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -188,4 +219,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>sonarsource</id>
+			<name>SonarSource</name>
+			<url>https://repox.jfrog.io/repox/sonarsource-public</url>
+		</repository>
+	</repositories>
+
 </project>

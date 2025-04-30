@@ -133,7 +133,7 @@ public class OidcConfiguration {
   }
 
   public String loginStrategy() {
-    return config.get(LOGIN_STRATEGY).orElse(null);
+    return config.get(LOGIN_STRATEGY).orElse(LOGIN_STRATEGY_PREFERRED_USERNAME);
   }
 
   public String loginStrategyCustomClaimName() {
@@ -145,7 +145,7 @@ public class OidcConfiguration {
   }
 
   public String syncGroupsClaimName() {
-    return config.get(GROUPS_SYNC_CLAIM_NAME).orElse(null);
+    return config.get(GROUPS_SYNC_CLAIM_NAME).orElse("groups");
   }
 
   public String iconPath() {

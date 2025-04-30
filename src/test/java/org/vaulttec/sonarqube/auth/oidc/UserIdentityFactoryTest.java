@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.sonar.api.config.PropertyDefinitions;
 import org.sonar.api.config.internal.MapSettings;
 import org.sonar.api.server.authentication.UserIdentity;
+import org.sonar.api.utils.System2;
 
 import java.util.Arrays;
 
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 
 public class UserIdentityFactoryTest {
 
-  MapSettings settings = new MapSettings(new PropertyDefinitions(OidcConfiguration.definitions()));
+  MapSettings settings = new MapSettings(new PropertyDefinitions(System2.INSTANCE, OidcConfiguration.definitions()));
   UserIdentityFactory underTest = new UserIdentityFactory(new OidcConfiguration(settings.asConfig()));
 
   @Test

@@ -93,19 +93,15 @@ public class OidcClientTest extends AbstractOidcTest {
     assertEquals("invalid access code", VALID_CODE, code.getValue());
   }
 
-  @Test
+  @Test(expected = IllegalStateException.class)
   public void invalidAuthenticationResponseUri() {
     OidcClient underTest = newSpyOidcClient();
     HttpServletRequest request = mock(HttpServletRequest.class);
     when(request.getMethod()).thenReturn("GET");
-    when(request.getLocalAddr()).thenReturn("invalid . com");
+    when(request.getRequestURL()).thenReturn(new StringBuffer("http://invalid-url"));
+    when(request.getQueryString()).thenReturn("error=invalid_request&error_description=the request is not valid or malformed");
     when(request.getHeaderNames()).thenReturn(Collections.emptyEnumeration());
-    try {
-      underTest.getAuthorizationCode(request);
-      failBecauseExceptionWasNotThrown(IllegalStateException.class);
-    } catch (IllegalStateException e) {
-      assertEquals("Error while parsing callback request", e.getMessage());
-    }
+    underTest.getAuthorizationCode(request);
   }
 
   @Test

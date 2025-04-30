@@ -24,15 +24,19 @@ import static org.vaulttec.sonarqube.auth.oidc.OidcConfiguration.LOGIN_STRATEGY_
 
 import org.junit.Test;
 import org.sonar.api.CoreProperties;
-import org.sonar.api.config.PropertyDefinitions;
+import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.config.internal.MapSettings;
+import org.sonar.api.config.PropertyDefinitions;
+import org.sonar.api.utils.System2;
+
+import java.util.List;
 
 public class OidcConfigurationTest {
 
   private static final String SONAR_URL = "https://sonar.acme.com";
   private static final String AUTH_URL = "https://auth.acme.com";
 
-  private MapSettings settings = new MapSettings(new PropertyDefinitions(OidcConfiguration.definitions()));
+  private MapSettings settings = new MapSettings(new PropertyDefinitions(System2.INSTANCE));
   private OidcConfiguration underTest = new OidcConfiguration(settings.asConfig());
 
   @Test
@@ -162,8 +166,11 @@ public class OidcConfigurationTest {
   }
 
   @Test
-  public void definitions() {
-    assertThat(OidcConfiguration.definitions()).hasSize(15);
+  public void testDefinitions() {
+    List<PropertyDefinition> definitions = OidcConfiguration.definitions();
+    assertThat(definitions).hasSize(15);
+    assertThat(definitions.get(0).key()).isEqualTo("sonar.auth.oidc.enabled");
+    assertThat(definitions.get(0).defaultValue()).isEqualTo("false");
   }
 
   @Test

@@ -51,12 +51,15 @@ public class OidcIdentityProvider implements OAuth2IdentityProvider {
 
   @Override
   public String getName() {
-    return config.loginButtonText();
+    return "OpenID Connect";
   }
 
   @Override
   public Display getDisplay() {
-    return Display.builder().setIconPath(config.iconPath()).setBackgroundColor(config.backgroundColor()).build();
+    return Display.builder()
+        .setIconPath("/static/authoidc/openid.svg")
+        .setBackgroundColor("#F7931E")
+        .build();
   }
 
   @Override
